@@ -1,4 +1,4 @@
-FROM alpine:3.19 as builder
+FROM alpine:3.22 AS builder
 
 LABEL maintainer="Opstree Solutions"
 
@@ -31,7 +31,7 @@ RUN VERSION=$(echo ${REDIS_VERSION} | sed -e "s/^v//g"); \
     make -C redis-${VERSION} all; \
     make -C redis-${VERSION} install
 
-FROM alpine:3.19
+FROM alpine:3.22
 
 LABEL maintainer="Opstree Solutions"
 
@@ -42,6 +42,8 @@ ENV REDIS_PORT=6379
 LABEL version=1.0 \
       arch=$TARGETARCH \
       description="A production grade performance tuned redis docker image created by Opstree Solutions"
+
+RUN apk upgrade --no-cache
 
 COPY --from=builder /usr/local/bin/redis-server /usr/local/bin/redis-server
 COPY --from=builder /usr/local/bin/redis-cli /usr/local/bin/redis-cli
