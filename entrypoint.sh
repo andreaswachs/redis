@@ -7,6 +7,7 @@ DATA_DIR=${DATA_DIR:-"/data"}
 NODE_CONF_DIR=${NODE_CONF_DIR:-"/node-conf"}
 EXTERNAL_CONFIG_FILE=${EXTERNAL_CONFIG_FILE:-"/etc/redis/external.conf.d/redis-additional.conf"}
 REDIS_MAJOR_VERSION=${REDIS_MAJOR_VERSION:-"v7"}
+POD_HOSTNAME_USE_FQDN=${POD_HOSTNAME_USE_FQDN:-"true"}
 
 apply_permissions() {
     chgrp -R 1000 /etc/redis
@@ -41,7 +42,11 @@ redis_mode_setup() {
             echo cluster-config-file "${NODE_CONF_DIR}/nodes.conf"
         } >> /etc/redis/redis.conf
 
-        POD_HOSTNAME=$(hostname)
+        if [[ "${POD_HOSTNAME_USE_FQDN}" == "true" ]]; then
+            POD_HOSTNAME=$(hostname -f)
+        else
+            POD_HOSTNAME=$(hostname)
+        fi
         POD_IP=$(hostname -i)
         sed -i -e "/myself/ s/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/${POD_IP}/" "${NODE_CONF_DIR}/nodes.conf"
     else
