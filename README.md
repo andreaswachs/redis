@@ -36,6 +36,30 @@ That's it
 
 > Note : latest tag would be comptabile with latest operator version.
 
+## Environment Variables
+
+The Redis container supports the following environment variables for configuration:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `POD_HOSTNAME_USE_FQDN` | `"true"` | Controls whether to use FQDN (`hostname -f`) or short hostname (`hostname -s`) for cluster announce hostname. Set to `"false"` to use short hostname. Useful in Kubernetes environments with specific hostname resolution requirements. |
+| `PERSISTENCE_ENABLED` | `"false"` | Enable Redis persistence (RDB snapshots and AOF). |
+| `DATA_DIR` | `"/data"` | Directory path for Redis data storage. |
+| `NODE_CONF_DIR` | `"/node-conf"` | Directory path for Redis cluster node configuration files. |
+| `EXTERNAL_CONFIG_FILE` | `"/etc/redis/external.conf.d/redis-additional.conf"` | Path to external Redis configuration file for additional custom settings. |
+| `REDIS_MAJOR_VERSION` | `"v7"` | Redis major version to use. |
+
+Additional environment variables for cluster setup:
+
+| Variable | Description |
+|----------|-------------|
+| `SETUP_MODE` | Setup mode: `cluster` or `standalone` |
+| `SERVER_MODE` | Server mode: `master` or `slave` |
+| `REDIS_PASSWORD` | Redis authentication password |
+| `MASTER_IP` | Master node IP address (for slave nodes) |
+| `SLAVE_IP` | Slave node IP address |
+| `MASTER_LIST` | Space-separated list of master nodes (format: `ip:port ip:port ...`) |
+
 ## Building Image
 
 #### Redis Docker Image
